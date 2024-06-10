@@ -21,3 +21,12 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['id', 'author', 'created_at', 'content', 'image', 'likes_count']
+
+    
+class FilmSerializer(serializers.ModelSerializer):
+    author = ProfileSerializer(many=False)
+    created_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S EST")
+
+    class Meta:
+        model = Film
+        fields = ['id', 'author', 'created_at', 'release_date', 'title', 'image']

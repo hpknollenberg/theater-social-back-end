@@ -26,10 +26,12 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('create-film/', create_film),
     path('create-post/', create_post),
     path('create-user/', create_user),
     path('delete-post/', delete_post),
     path('edit-post/', edit_post),
+    path('get-films/', get_films),
     path('get-posts/', get_posts),
     path('profile/', get_profile),
     path('refresh/', TokenRefreshView.as_view()),

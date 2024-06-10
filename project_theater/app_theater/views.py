@@ -21,6 +21,20 @@ def create_post(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def create_film(request):
+   if request.data['author'] == "1":
+      Film.objects.create(
+         author = Profile.objects.get(id=request.data['author']),
+         release_date = request.data['release_date'],
+         title = request.data['title'],
+         image = request.data['image']
+      )
+      return Response()
+
+
+@api_view(['POST'])
 @permission_classes([])
 def create_user(request):
   user = User.objects.create(
@@ -62,6 +76,13 @@ def edit_post(request):
       edit_post_serialized = PostSerializer(post)
       return Response(edit_post_serialized.data)
       
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_films(request):
+   films = Film.objects.all().order_by('-created_at')
+   films_serialized = FilmSerializer(films, many=True)
+   return Response(films_serialized.data)
 
 
 @api_view(['GET'])
