@@ -20,6 +20,18 @@ def create_post(request):
       return Response()
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def create_film(request):
+   if request.data['author'] == "1":
+      Film.objects.create(
+         author = Profile.objects.get(id=request.data['author']),
+         release_date = request.data['release_date'],
+         title = request.data['title'],
+         image = request.data['image']
+      )
+      return Response()
 
 
 @api_view(['POST'])
@@ -39,6 +51,46 @@ def create_user(request):
   profile_serialized = ProfileSerializer(profile)
   return Response(profile_serialized.data)
 
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def delete_post(request):
+  if request.data['author'] == '1':
+    post = Post.objects.get(id=request.data['post'])
+    post.delete()
+    return Response()
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def edit_post(request):
+   if request.data['author'] == '1':
+      post = Post.objects.get(id=request.data['post'])
+      post.content = request.data['content']
+      post.save(update_fields=['content'])
+      if request.data['image'] != "":
+        post.image = request.data['image']
+        post.save(update_fields=['image'])
+      edit_post_serialized = PostSerializer(post)
+      return Response(edit_post_serialized.data)
+      
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_films(request):
+   films = Film.objects.all().order_by('-created_at')
+   films_serialized = FilmSerializer(films, many=True)
+   return Response(films_serialized.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_posts(request):
+    posts = Post.objects.all().order_by('-created_at')
+    posts_serialized = PostSerializer(posts, many=True)
+    return Response(posts_serialized.data)
 
 
 @api_view(['GET'])

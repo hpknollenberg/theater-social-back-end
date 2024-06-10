@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from app_theater.views import *
+from django.conf import settings
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -25,9 +26,18 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('profile/', get_profile),
-    path('token/', TokenObtainPairView.as_view()),
-    path('refresh/', TokenRefreshView.as_view()),
-    path('create-user/', create_user),
+    path('create-film/', create_film),
     path('create-post/', create_post),
+    path('create-user/', create_user),
+    path('delete-post/', delete_post),
+    path('edit-post/', edit_post),
+    path('get-films/', get_films),
+    path('get-posts/', get_posts),
+    path('profile/', get_profile),
+    path('refresh/', TokenRefreshView.as_view()),
+    path('token/', TokenObtainPairView.as_view()),
 ]
+
+if settings.DEBUG:
+  from django.conf.urls.static import static
+  urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
