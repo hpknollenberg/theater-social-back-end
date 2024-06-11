@@ -56,11 +56,37 @@ def create_user(request):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
+def delete_film(request):
+   if request.data['is_admin'] == 'true':
+      film = Film.objects.get(id=request.data['film'])
+      film.delete()
+      return Response()
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def delete_post(request):
   if request.data['is_admin'] == 'true':
     post = Post.objects.get(id=request.data['post'])
     post.delete()
     return Response()
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def edit_film(request):
+   if request.data['is_admin'] == 'true':
+      film = Film.objects.get(id=request.data['film'])
+      film.title = request.data['title']
+      film.release_date = request.data['release_date']
+      film.save(update_fields=['title', 'release_date'])
+      if request.data['image'] != "":
+         film.image = request.data['image']
+         film.save(update_fields=['image'])
+      edit_film_serialized = FilmSerializer(film)
+      return Response(edit_film_serialized.data)
 
 
 @api_view(['PUT'])
