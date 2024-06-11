@@ -7,28 +7,29 @@ from .models import *
 from .serializers import *
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-@parser_classes([MultiPartParser, FormParser])
-def create_post(request):
-   if request.data['author'] == "1":
-      Post.objects.create(
-         author = Profile.objects.get(id=request.data['author']),
-         content = request.data['content'],
-         image = request.data['image']
-      )
-      return Response()
-
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def create_film(request):
-   if request.data['author'] == "1":
+   if request.data['is_admin'] == "true":
       Film.objects.create(
          author = Profile.objects.get(id=request.data['author']),
          release_date = request.data['release_date'],
          title = request.data['title'],
+         image = request.data['image']
+      )
+      return Response()
+   
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def create_post(request):
+   if request.data['is_admin'] == "true":
+      Post.objects.create(
+         author = Profile.objects.get(id=request.data['author']),
+         content = request.data['content'],
          image = request.data['image']
       )
       return Response()
@@ -43,9 +44,9 @@ def create_user(request):
   user.set_password(request.data['password'])
   user.save()
   profile = Profile.objects.create(
-    user = user,
-    first_name = request.data['first_name'],
-    last_name = request.data['last_name']
+   user = user,
+   first_name = request.data['first_name'],
+   last_name = request.data['last_name']
   )
   profile.save()
   profile_serialized = ProfileSerializer(profile)
@@ -56,7 +57,7 @@ def create_user(request):
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def delete_post(request):
-  if request.data['author'] == '1':
+  if request.data['is_admin'] == 'true':
     post = Post.objects.get(id=request.data['post'])
     post.delete()
     return Response()
@@ -66,7 +67,7 @@ def delete_post(request):
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def edit_post(request):
-   if request.data['author'] == '1':
+   if request.data['is_admin'] == 'true':
       post = Post.objects.get(id=request.data['post'])
       post.content = request.data['content']
       post.save(update_fields=['content'])
