@@ -32,21 +32,21 @@ class Film(models.Model):
         return self.title
 
 
-
-class Choice(models.Model):
-    name = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-
 class Poll(models.Model):
     name = models.TextField()
-    choices = models.ManyToManyField(Choice, related_name='related_polls')
     id = models.TextField(primary_key=True)
 
     def __str__(self):
         return self.name
+    
+
+class Choice(models.Model):
+    name = models.TextField()
+    poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name="choices", null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+    
 
 class Vote(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE, related_name="votes", null=True, blank=True)
