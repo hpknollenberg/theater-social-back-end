@@ -2,6 +2,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
+import simplejson as json
 
 from .models import *
 from .serializers import *
@@ -21,6 +22,25 @@ def create_film(request):
       )
       return Response()
    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def create_poll(request):
+   if request.data['is_admin'] == "true":
+      Poll.objects.create(
+         name = request.data['title'],
+         id = request.data['id']
+      )
+      poll = Poll.objects.get(pk = request.data['id'])
+      poll_choices = poll.choices
+      choices = json.loads(request.data['choices'])
+      for choice in choices:
+         curr_choice = Choice.objects.create(name=choice)
+         poll_choices.add(curr_choice)
+      return Response()
+
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -51,6 +71,21 @@ def create_user(request):
   profile.save()
   profile_serialized = ProfileSerializer(profile)
   return Response(profile_serialized.data)
+
+
+@api_view(['POST'])
+@permission_classes([])
+def create_vote(request):
+   if not Vote.objects.filter(profile=request.data['profile'], poll=request.data['poll']).exists():
+      vote = Vote.objects.create(
+         profile = Profile.objects.get(id=request.data['profile']),
+         poll = Poll.objects.get(id=request.data['poll']),
+         choice = Choice.objects.get(id=request.data['choice'])
+      )
+      vote.save()
+      vote_serialized = VoteSerializer(vote)
+      return Response(vote_serialized.data)
+      
 
 
 @api_view(['DELETE'])
@@ -110,6 +145,14 @@ def get_films(request):
    films = Film.objects.all().order_by('-created_at')
    films_serialized = FilmSerializer(films, many=True)
    return Response(films_serialized.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_polls(request):
+   polls = Poll.objects.all()
+   polls_serialized = PollSerializer(polls, many=True)
+   return Response(polls_serialized.data)
 
 
 @api_view(['GET'])
