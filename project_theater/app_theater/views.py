@@ -33,11 +33,12 @@ def create_poll(request):
          id = request.data['id']
       )
       poll = Poll.objects.get(pk = request.data['id'])
-      poll_choices = poll.choices
       choices = json.loads(request.data['choices'])
       for choice in choices:
-         curr_choice = Choice.objects.create(name=choice)
-         poll_choices.add(curr_choice)
+         Choice.objects.create(
+            name=choice,
+            poll=poll
+            )
       return Response()
 
 
@@ -95,6 +96,16 @@ def delete_film(request):
    if request.data['is_admin'] == 'true':
       film = Film.objects.get(id=request.data['film'])
       film.delete()
+      return Response()
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_poll(request):
+   print("admin: ", request.data['is_admin'])
+   if request.data['is_admin'] == True:
+      poll = Poll.objects.get(id=request.data['poll'])
+      poll.delete()
       return Response()
 
 
