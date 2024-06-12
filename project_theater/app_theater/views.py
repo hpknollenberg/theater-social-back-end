@@ -191,3 +191,18 @@ def get_votes(request):
    votes = Vote.objects.filter(profile=profile)
    votes_serialized = VoteSerializer(votes, many=True)
    return Response(votes_serialized.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_likes(request):
+   user = request.user
+   profile = user.profile
+   profile_likes = profile.likes
+   post = Post.objects.get(id=request.data['post'])
+   if post.likes.filter(id=profile.id).exists():
+      profile_likes.remove(post)
+   else:
+      profile_likes.add(post)
+   likes_serialized = PostSerializer(profile_likes, many=True)
+   return Response(likes_serialized.data)
