@@ -181,3 +181,13 @@ def get_profile(request):
     profile = user.profile
     serializer = ProfileSerializer(profile, many=False)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_votes(request):
+   user = request.user
+   profile = user.profile
+   votes = Vote.objects.filter(profile=profile)
+   votes_serialized = VoteSerializer(votes, many=True)
+   return Response(votes_serialized.data)
