@@ -30,3 +30,26 @@ class FilmSerializer(serializers.ModelSerializer):
     class Meta:
         model = Film
         fields = ['id', 'author', 'created_at', 'release_date', 'title', 'image']
+
+
+class ChoiceSerializer(serializers.ModelSerializer):
+    vote_count = serializers.IntegerField(source='votes.count')
+
+    class Meta:
+        model = Choice
+        fields = ['id', 'name', 'vote_count']
+
+
+class PollSerializer(serializers.ModelSerializer):
+    choices = ChoiceSerializer(many=True, read_only=True)
+    class Meta:
+        model = Poll
+        fields = ['id', 'name', 'choices']
+
+
+class VoteSerializer(serializers.ModelSerializer):
+    poll = PollSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Vote
+        fields = ['id', 'profile', 'poll']
