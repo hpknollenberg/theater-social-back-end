@@ -39,6 +39,7 @@ urlpatterns = [
     path('get-films/', get_films),
     path('get-polls/', get_polls),
     path('get-posts/', get_posts),
+    path('get-votes/', get_votes),
     path('profile/', get_profile),
     path('refresh/', TokenRefreshView.as_view()),
     path('token/', TokenObtainPairView.as_view()),
