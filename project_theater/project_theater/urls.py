@@ -43,6 +43,7 @@ urlpatterns = [
     path('profile/', get_profile),
     path('refresh/', TokenRefreshView.as_view()),
     path('token/', TokenObtainPairView.as_view()),
+    path('update-likes/', update_likes),
 ]
 
 if settings.DEBUG:
