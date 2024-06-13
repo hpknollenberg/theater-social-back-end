@@ -112,6 +112,13 @@ def create_vote(request):
       return Response(vote_serialized.data)
       
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_discussion(request):
+   if request.data['is_admin'] == True:
+      discussion = Discussion.objects.get(id=request.data['discussion'])
+      discussion.delete()
+      return Response()
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -177,7 +184,7 @@ def edit_post(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_comments(request):
-   comments = Comment.objects.all().order_by('created_at')
+   comments = Comment.objects.all().order_by('-created_at')
    comments_serialized = CommentSerializer(comments, many=True)
    return Response(comments_serialized.data)
 
@@ -235,6 +242,21 @@ def get_votes(request):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
+def update_comment_likes(request):
+   user = request.user
+   profile = user.profile
+   profile_comment_likes = profile.comment_likes
+   comment = Comment.objects.get(id=request.data['comment'])
+   if comment.likes.filter(id=profile.id).exists():
+      profile_comment_likes.remove(comment)
+   else:
+      profile_comment_likes.add(comment)
+   comment_likes_serialized = CommentSerializer(profile_comment_likes, many=True)
+   return Response(comment_likes_serialized.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_likes(request):
    user = request.user
    profile = user.profile
@@ -246,3 +268,5 @@ def update_likes(request):
       profile_likes.add(post)
    likes_serialized = PostSerializer(profile_likes, many=True)
    return Response(likes_serialized.data)
+
+

@@ -33,6 +33,7 @@ urlpatterns = [
     path('create-post/', create_post),
     path('create-user/', create_user),
     path('create-vote/', create_vote),
+    path('delete-discussion/', delete_discussion),
     path('delete-film/', delete_film),
     path('delete-poll/', delete_poll),
     path('delete-post/', delete_post),
@@ -47,7 +48,9 @@ urlpatterns = [
     path('profile/', get_profile),
     path('refresh/', TokenRefreshView.as_view()),
     path('token/', TokenObtainPairView.as_view()),
+    path('update-comment-likes/', update_comment_likes),
     path('update-likes/', update_likes),
+    
 ]
 
 if settings.DEBUG:
