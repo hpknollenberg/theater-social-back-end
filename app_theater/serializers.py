@@ -53,3 +53,11 @@ class VoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vote
         fields = ['id', 'profile', 'poll']
+
+
+class DiscussionSerializer(serializers.ModelSerializer):
+    author = ProfileSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Discussion
+        fields = ['id', 'author', 'name', 'description', 'image']

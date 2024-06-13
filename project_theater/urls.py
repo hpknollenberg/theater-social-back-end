@@ -26,6 +26,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('create-discussion/', create_discussion),
     path('create-film/', create_film),
     path('create-poll/', create_poll),
     path('create-post/', create_post),

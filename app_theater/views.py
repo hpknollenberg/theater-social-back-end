@@ -8,6 +8,19 @@ from .models import *
 from .serializers import *
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def create_discussion(request):
+   if request.data['is_admin'] == 'true':
+      Discussion.objects.create(
+         author = Profile.objects.get(id=request.data['author']),
+         name = request.data['name'],
+         description = request.data['description'],
+         image = request.data['image']
+      )
+      return Response()
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
