@@ -10,6 +10,17 @@ from .serializers import *
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+def create_comment(request):
+   Comment.objects.create(
+      author = Profile.objects.get(id=request.data['author']),
+      content = request.data['content'],
+      discussion = Discussion.objects.get(id=request.data['discussion']),
+   )
+   return Response()
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def create_discussion(request):
    if request.data['is_admin'] == 'true':
@@ -161,7 +172,23 @@ def edit_post(request):
         post.save(update_fields=['image'])
       edit_post_serialized = PostSerializer(post)
       return Response(edit_post_serialized.data)
-      
+   
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_comments(request):
+   comments = Comment.objects.all().order_by('created_at')
+   comments_serialized = CommentSerializer(comments, many=True)
+   return Response(comments_serialized.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_discussions(request):
+   discussions = Discussion.objects.all().order_by('-created_at')
+   discussions_serialized = DiscussionSerializer(discussions, many=True)
+   return Response(discussions_serialized.data)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

@@ -62,6 +62,18 @@ class Discussion(models.Model):
     name = models.TextField()
     description = models.TextField()
     image = models.ImageField(upload_to='images/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
+    
+
+class Comment(models.Model):
+    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name="comment", null=True)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE, related_name="discussion_comments", null=True)
+    likes = models.ManyToManyField(Profile, related_name="comment_likes")
+
+    def __str__(self):
+        return self.content

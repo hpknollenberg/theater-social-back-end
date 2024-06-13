@@ -26,6 +26,7 @@ from rest_framework_simplejwt.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('create-comment/', create_comment),
     path('create-discussion/', create_discussion),
     path('create-film/', create_film),
     path('create-poll/', create_poll),
@@ -37,6 +38,8 @@ urlpatterns = [
     path('delete-post/', delete_post),
     path('edit-film/', edit_film),
     path('edit-post/', edit_post),
+    path('get-comments/', get_comments),
+    path('get-discussions/', get_discussions),
     path('get-films/', get_films),
     path('get-polls/', get_polls),
     path('get-posts/', get_posts),
