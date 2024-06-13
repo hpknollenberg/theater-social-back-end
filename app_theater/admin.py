@@ -23,6 +23,9 @@ class FilmAdmin(admin.ModelAdmin):
 class DiscussionAdmin(admin.ModelAdmin):
     pass
 
+class CommentAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Poll, PollAdmin)
@@ -30,3 +33,4 @@ admin.site.register(Choice, ChoiceAdmin)
 admin.site.register(Vote, VoteAdmin)
 admin.site.register(Film, FilmAdmin)
 admin.site.register(Discussion, DiscussionAdmin)
+admin.site.register(Comment, CommentAdmin)

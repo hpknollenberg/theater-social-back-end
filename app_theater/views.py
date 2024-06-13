@@ -10,6 +10,17 @@ from .serializers import *
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+def create_comment(request):
+   Comment.objects.create(
+      author = Profile.objects.get(id=request.data['author']),
+      content = request.data['content'],
+      discussion = Discussion.objects.get(id=request.data['discussion']),
+   )
+   return Response()
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def create_discussion(request):
    if request.data['is_admin'] == 'true':
@@ -101,6 +112,13 @@ def create_vote(request):
       return Response(vote_serialized.data)
       
 
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_discussion(request):
+   if request.data['is_admin'] == True:
+      discussion = Discussion.objects.get(id=request.data['discussion'])
+      discussion.delete()
+      return Response()
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -161,7 +179,23 @@ def edit_post(request):
         post.save(update_fields=['image'])
       edit_post_serialized = PostSerializer(post)
       return Response(edit_post_serialized.data)
-      
+   
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_comments(request):
+   comments = Comment.objects.all().order_by('-created_at')
+   comments_serialized = CommentSerializer(comments, many=True)
+   return Response(comments_serialized.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_discussions(request):
+   discussions = Discussion.objects.all().order_by('-created_at')
+   discussions_serialized = DiscussionSerializer(discussions, many=True)
+   return Response(discussions_serialized.data)
+
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -208,6 +242,21 @@ def get_votes(request):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
+def update_comment_likes(request):
+   user = request.user
+   profile = user.profile
+   profile_comment_likes = profile.comment_likes
+   comment = Comment.objects.get(id=request.data['comment'])
+   if comment.likes.filter(id=profile.id).exists():
+      profile_comment_likes.remove(comment)
+   else:
+      profile_comment_likes.add(comment)
+   comment_likes_serialized = CommentSerializer(profile_comment_likes, many=True)
+   return Response(comment_likes_serialized.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_likes(request):
    user = request.user
    profile = user.profile
@@ -219,3 +268,5 @@ def update_likes(request):
       profile_likes.add(post)
    likes_serialized = PostSerializer(profile_likes, many=True)
    return Response(likes_serialized.data)
+
+

@@ -60,4 +60,14 @@ class DiscussionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Discussion
-        fields = ['id', 'author', 'name', 'description', 'image']
+        fields = ['id', 'author', 'name', 'description', 'image', 'created_at']
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    author = ProfileSerializer(many=False, read_only=True)
+    discussion = DiscussionSerializer(many=False, read_only=True)
+    likes_count = serializers.IntegerField(source='likes.count')
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'author', 'discussion', 'content', 'likes_count', 'created_at']
