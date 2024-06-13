@@ -54,4 +54,14 @@ class Vote(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="votes", null=True, blank=True)
 
     def __str__(self):
-        return self.profile.last_name
+        return self.profile.user.username
+
+
+class Discussion(models.Model):
+    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name="discussion", null=True)
+    name = models.TextField()
+    description = models.TextField()
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
