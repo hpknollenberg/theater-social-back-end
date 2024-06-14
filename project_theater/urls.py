@@ -33,6 +33,7 @@ urlpatterns = [
     path('create-post/', create_post),
     path('create-user/', create_user),
     path('create-vote/', create_vote),
+    path('delete-comment/', delete_comment),
     path('delete-discussion/', delete_discussion),
     path('delete-film/', delete_film),
     path('delete-poll/', delete_poll),
