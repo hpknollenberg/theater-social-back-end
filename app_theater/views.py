@@ -110,6 +110,14 @@ def create_vote(request):
       vote.save()
       vote_serialized = VoteSerializer(vote)
       return Response(vote_serialized.data)
+   
+
+@api_view(['DELETE'])
+@permission_classes([])
+def delete_comment(request):
+   comment = Comment.objects.get(id=request.data['comment'])
+   comment.delete()
+   return Response()
       
 
 @api_view(['DELETE'])
