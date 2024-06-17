@@ -49,8 +49,9 @@ def create_film(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def create_menu_item(request):
-   if request.data['is_admin'] == True:
+   if request.data['is_admin'] == 'true':
       MenuItem.objects.create(
          name = request.data['name'],
          category = request.data['category'],
@@ -152,8 +153,16 @@ def delete_film(request):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
+def delete_menu_item(request):
+   if request.data['is_admin'] == True:
+      menu_item = MenuItem.objects.get(id=request.data['menu_item'])
+      menu_item.delete()
+      return Response()
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
 def delete_poll(request):
-   print("admin: ", request.data['is_admin'])
    if request.data['is_admin'] == True:
       poll = Poll.objects.get(id=request.data['poll'])
       poll.delete()
@@ -228,7 +237,7 @@ def get_films(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_menu_items(request):
-   menu_items = MenuItem.objects.all()
+   menu_items = MenuItem.objects.all().order_by('price')
    menu_items_serialized = MenuItemSerializer(menu_items, many=True)
    return Response(menu_items_serialized.data)
 

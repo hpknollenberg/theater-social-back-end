@@ -37,6 +37,7 @@ urlpatterns = [
     path('delete-comment/', delete_comment),
     path('delete-discussion/', delete_discussion),
     path('delete-film/', delete_film),
+    path('delete-menu-item/', delete_menu_item),
     path('delete-poll/', delete_poll),
     path('delete-post/', delete_post),
     path('edit-film/', edit_film),
