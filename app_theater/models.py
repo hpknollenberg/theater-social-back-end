@@ -77,3 +77,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
+    
+
+class MenuItem(models.Model):
+    name = models.TextField()
+    category = models.TextField()
+    price = models.DecimalField(max_digits = 4, decimal_places = 2)
+
+    def __str__(self):
+        return self.name

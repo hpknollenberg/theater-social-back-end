@@ -49,6 +49,18 @@ def create_film(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+def create_menu_item(request):
+   if request.data['is_admin'] == True:
+      MenuItem.objects.create(
+         name = request.data['name'],
+         category = request.data['category'],
+         price = request.data['price']
+      )
+      return Response()
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
 def create_poll(request):
    if request.data['is_admin'] == "true":
@@ -211,6 +223,14 @@ def get_films(request):
    films = Film.objects.all().order_by('-created_at')
    films_serialized = FilmSerializer(films, many=True)
    return Response(films_serialized.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_menu_items(request):
+   menu_items = MenuItem.objects.all()
+   menu_items_serialized = MenuItemSerializer(menu_items, many=True)
+   return Response(menu_items_serialized.data)
 
 
 @api_view(['GET'])
