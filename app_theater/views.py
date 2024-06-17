@@ -198,6 +198,25 @@ def edit_film(request):
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
+def edit_menu_item(request):
+   if request.data['is_admin'] == 'true':
+      menu_item = MenuItem.objects.get(id=request.data['menu_item'])
+      if request.data['category'] != "":
+         menu_item.category = request.data['category']
+         menu_item.save(update_fields=['category'])
+      if request.data['name'] != "":
+         menu_item.name = request.data['name']
+         menu_item.save(update_fields=['name'])
+      if request.data['price'] != "":
+         menu_item.price = request.data['price']
+         menu_item.save(update_fields=['price'])
+      menu_item_serialized = MenuItemSerializer(menu_item)
+      return Response(menu_item_serialized.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def edit_post(request):
    if request.data['is_admin'] == 'true':
       post = Post.objects.get(id=request.data['post'])
