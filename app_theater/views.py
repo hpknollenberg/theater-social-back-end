@@ -3,6 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 import simplejson as json
+from django.utils.dateparse import parse_date
+from datetime import datetime
 
 from .models import *
 from .serializers import *
@@ -94,6 +96,31 @@ def create_post(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def create_showtime(request):
+   if request.data['is_admin'] == "true":
+      showtimes = json.loads(request.data['showtimes'])
+      ids = json.loads(request.data['time_ids'])
+      for index, showtime in enumerate(showtimes):
+         SpecificTime.objects.create(
+            hour_minute = datetime.time(datetime.strptime(showtime, '%I:%M %p')),
+            id = ids[index]
+         )
+      Showtime.objects.create(
+         film = request.data['film'],
+         date = parse_date(request.data['date']),
+         id = request.data['id']
+      )
+      film = Showtime.objects.get(id=request.data['id'])
+      for index, showtime in enumerate(showtimes):
+         time_to_add = SpecificTime.objects.get(id=ids[index])
+         film.times.add(time_to_add)
+      return Response()
+
+
+
+@api_view(['POST'])
 @permission_classes([])
 def create_user(request):
   user = User.objects.create(
@@ -177,6 +204,26 @@ def delete_post(request):
     post = Post.objects.get(id=request.data['post'])
     post.delete()
     return Response()
+  
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def delete_showtime(request):
+   if request.data['is_admin'] == 'true':
+      showtime = Showtime.objects.get(id=request.data['id'])
+      showtime.delete()
+      return Response()
+   
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def delete_showtimes_day(request):
+   if request.data['is_admin'] == 'true':
+      day = Showtime.objects.filter(date=parse_date(request.data['day']))
+      day.delete()
+      return Response()
 
 
 @api_view(['PUT'])
@@ -284,6 +331,14 @@ def get_profile(request):
     profile = user.profile
     serializer = ProfileSerializer(profile, many=False)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_showtimes(request):
+   showtimes = Showtime.objects.all().order_by("date")
+   showtimes_serialized = ShowtimeSerializer(showtimes, many=True)
+   return Response(showtimes_serialized.data)
 
 
 @api_view(['GET'])

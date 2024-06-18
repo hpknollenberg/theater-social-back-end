@@ -86,3 +86,25 @@ class MenuItem(models.Model):
 
     def __str__(self):
         return self.name
+    
+
+class SpecificTime(models.Model):
+    hour_minute = models.TimeField(auto_now=False, auto_now_add=False)
+    id = models.TextField(primary_key=True)
+
+    def __str__(self):
+        return self.hour_minute
+    
+    class Meta:
+        ordering = ['hour_minute', 'id']
+
+
+class Showtime(models.Model):
+    film = models.TextField()
+    times = models.ManyToManyField(SpecificTime, related_name="showtime")
+    date = models.DateField()
+    id = models.TextField(primary_key=True)
+
+
+    def __str__(self):
+        return self.film
