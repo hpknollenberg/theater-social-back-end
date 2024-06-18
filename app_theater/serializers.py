@@ -77,3 +77,17 @@ class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
         fields = ['id', 'name', 'category', 'price']
+
+
+class SpecificTimeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpecificTime
+        fields = ['id', 'hour_minute']
+
+
+class ShowtimeSerializer(serializers.ModelSerializer):
+    times = SpecificTimeSerializer(many=True)
+    
+    class Meta:
+        model = Showtime
+        fields = ['id', 'film', 'times', 'date']

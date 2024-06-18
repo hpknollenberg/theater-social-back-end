@@ -29,6 +29,12 @@ class CommentAdmin(admin.ModelAdmin):
 class MenuItemAdmin(admin.ModelAdmin):
     pass
 
+class SpecificTimeAdmin(admin.ModelAdmin):
+    pass
+
+class ShowtimeAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Poll, PollAdmin)
@@ -38,3 +44,5 @@ admin.site.register(Film, FilmAdmin)
 admin.site.register(Discussion, DiscussionAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(MenuItem, MenuItemAdmin)
+admin.site.register(SpecificTime, SpecificTimeAdmin)
+admin.site.register(Showtime, ShowtimeAdmin)
