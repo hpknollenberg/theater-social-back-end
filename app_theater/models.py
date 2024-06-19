@@ -108,3 +108,15 @@ class Showtime(models.Model):
 
     def __str__(self):
         return self.film
+    
+
+class Event(models.Model):
+    title = models.TextField()
+    description = models.TextField()
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    rsvp = models.ManyToManyField(Profile, related_name="rsvp")
+    date = models.DateField()
+    time = models.TimeField(auto_now=False, auto_now_add=False)
+
+    def __str__(self):
+        return self.title

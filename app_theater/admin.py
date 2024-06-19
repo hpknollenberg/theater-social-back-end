@@ -35,6 +35,9 @@ class SpecificTimeAdmin(admin.ModelAdmin):
 class ShowtimeAdmin(admin.ModelAdmin):
     pass
 
+class EventAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(Poll, PollAdmin)
@@ -46,3 +49,4 @@ admin.site.register(Comment, CommentAdmin)
 admin.site.register(MenuItem, MenuItemAdmin)
 admin.site.register(SpecificTime, SpecificTimeAdmin)
 admin.site.register(Showtime, ShowtimeAdmin)
+admin.site.register(Event, EventAdmin)

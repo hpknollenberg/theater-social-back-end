@@ -91,3 +91,11 @@ class ShowtimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Showtime
         fields = ['id', 'film', 'times', 'date']
+
+
+class EventSerializer(serializers.ModelSerializer):
+    rsvp_count = serializers.IntegerField(source='rsvp.count')
+
+    class Meta:
+        model = Event
+        fields = ['id', 'title', 'description', 'image', 'rsvp', 'rsvp_count', 'date', 'time']

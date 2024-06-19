@@ -38,6 +38,21 @@ def create_discussion(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
+def create_event(request):
+   if request.data['is_admin'] == 'true':
+      Event.objects.create(
+         title = request.data['title'],
+         description = request.data['description'],
+         date = parse_date(request.data['date']),
+         time = datetime.time(datetime.strptime(request.data['time'], '%I:%M %p')),
+         image = request.data['image']
+      )
+      return Response()
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def create_film(request):
    if request.data['is_admin'] == "true":
       Film.objects.create(
@@ -290,6 +305,14 @@ def get_discussions(request):
    discussions = Discussion.objects.all().order_by('-created_at')
    discussions_serialized = DiscussionSerializer(discussions, many=True)
    return Response(discussions_serialized.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_events(request):
+   events = Event.objects.all().order_by('date', 'time')
+   events_serialized = EventSerializer(events, many=True)
+   return Response(events_serialized.data)
 
 
 @api_view(['GET'])
