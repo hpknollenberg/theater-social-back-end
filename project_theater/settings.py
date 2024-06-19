@@ -153,7 +153,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'https://theater-social-front-end.vercel.app'
+    'https://theater-social-front-end.vercel.app',
+    'https://cinemasocial.vercel.app'
 ]
 
 CORS_ALLOW_METHODS = [
