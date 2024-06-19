@@ -20,7 +20,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'author', 'created_at', 'content', 'image', 'likes_count']
+        fields = ['id', 'author', 'created_at', 'content', 'image', 'likes_count', 'likes']
 
     
 class FilmSerializer(serializers.ModelSerializer):
