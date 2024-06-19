@@ -93,7 +93,7 @@ class SpecificTime(models.Model):
     id = models.TextField(primary_key=True)
 
     def __str__(self):
-        return self.hour_minute
+        return str(self.hour_minute)
     
     class Meta:
         ordering = ['hour_minute', 'id']
