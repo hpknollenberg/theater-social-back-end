@@ -70,7 +70,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'author', 'discussion', 'content', 'likes_count', 'created_at']
+        fields = ['id', 'author', 'discussion', 'content', 'likes_count', 'created_at', 'likes']
 
 
 class MenuItemSerializer(serializers.ModelSerializer):
