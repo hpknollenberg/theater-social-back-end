@@ -336,7 +336,7 @@ def get_profile(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_showtimes(request):
-   showtimes = Showtime.objects.all().order_by("date")
+   showtimes = Showtime.objects.all().order_by("date", "film")
    showtimes_serialized = ShowtimeSerializer(showtimes, many=True)
    return Response(showtimes_serialized.data)
 
