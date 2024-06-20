@@ -432,3 +432,16 @@ def update_likes(request):
    return Response(likes_serialized.data)
 
 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_rsvp(request):
+   user = request.user
+   profile = user.profile
+   profile_rsvp = profile.rsvp
+   event = Event.objects.get(id=request.data['event'])
+   if event.rsvp.filter(id=profile.id).exists():
+      profile_rsvp.remove(event)
+   else:
+      profile_rsvp.add(event)
+   rsvp_serialized = EventSerializer(profile_rsvp, many=True)
+   return Response(rsvp_serialized.data)
