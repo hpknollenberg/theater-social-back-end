@@ -63,6 +63,7 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view()),
     path('update-comment-likes/', update_comment_likes),
     path('update-likes/', update_likes),
+    path('update-rsvp/', update_rsvp)
     
 ]
 
