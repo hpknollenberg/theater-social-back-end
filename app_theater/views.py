@@ -38,6 +38,21 @@ def create_discussion(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @parser_classes([MultiPartParser, FormParser])
+def create_event(request):
+   if request.data['is_admin'] == 'true':
+      Event.objects.create(
+         title = request.data['title'],
+         description = request.data['description'],
+         date = parse_date(request.data['date']),
+         time = datetime.time(datetime.strptime(request.data['time'], '%I:%M %p')),
+         image = request.data['image']
+      )
+      return Response()
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
 def create_film(request):
    if request.data['is_admin'] == "true":
       Film.objects.create(
@@ -167,6 +182,16 @@ def delete_discussion(request):
       discussion = Discussion.objects.get(id=request.data['discussion'])
       discussion.delete()
       return Response()
+   
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_event(request):
+   if request.data['is_admin'] == True:
+      event = Event.objects.get(id=request.data['event'])
+      event.delete()
+      return Response()
+
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -224,6 +249,24 @@ def delete_showtimes_day(request):
       day = Showtime.objects.filter(date=parse_date(request.data['day']))
       day.delete()
       return Response()
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser])
+def edit_event(request):
+   if request.data['is_admin'] == 'true':
+      event = Event.objects.get(id=request.data['event'])
+      event.title = request.data['title']
+      event.description = request.data['description']
+      event.date = parse_date(request.data['date'])
+      event.time = datetime.time(datetime.strptime(request.data['time'], '%I:%M %p'))
+      event.save(update_fields=['title', 'description', 'date', 'time'])
+      if request.data['image'] != "":
+         event.image = request.data['image']
+         event.save(update_fields=['image'])
+      edit_event_serialized = EventSerializer(event)
+      return Response(edit_event_serialized.data)
 
 
 @api_view(['PUT'])
@@ -290,6 +333,14 @@ def get_discussions(request):
    discussions = Discussion.objects.all().order_by('-created_at')
    discussions_serialized = DiscussionSerializer(discussions, many=True)
    return Response(discussions_serialized.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_events(request):
+   events = Event.objects.all().order_by('date', 'time')
+   events_serialized = EventSerializer(events, many=True)
+   return Response(events_serialized.data)
 
 
 @api_view(['GET'])
