@@ -26,6 +26,9 @@ class DiscussionAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     pass
 
+class ThreadCommentAdmin(admin.ModelAdmin):
+    pass
+
 class MenuItemAdmin(admin.ModelAdmin):
     pass
 
@@ -46,6 +49,7 @@ admin.site.register(Vote, VoteAdmin)
 admin.site.register(Film, FilmAdmin)
 admin.site.register(Discussion, DiscussionAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(ThreadComment, ThreadCommentAdmin)
 admin.site.register(MenuItem, MenuItemAdmin)
 admin.site.register(SpecificTime, SpecificTimeAdmin)
 admin.site.register(Showtime, ShowtimeAdmin)

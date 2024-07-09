@@ -70,7 +70,17 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['id', 'author', 'discussion', 'content', 'likes_count', 'created_at', 'likes']
+        fields = ['id', 'author', 'discussion', 'content', 'likes_count', 'created_at', 'likes', 'comment_thread_comments']
+
+
+class ThreadCommentSerializer(serializers.ModelSerializer):
+    author = ProfileSerializer(many=False, read_only=True)
+    comment = CommentSerializer(many=False, read_only=True)
+    likes_count = serializers.IntegerField(source='likes.count')
+
+    class Meta:
+        model = ThreadComment
+        fields = ['id', 'author', 'content', 'created_at', 'comment', 'likes', 'likes_count']
 
 
 class MenuItemSerializer(serializers.ModelSerializer):

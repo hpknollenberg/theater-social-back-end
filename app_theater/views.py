@@ -134,6 +134,16 @@ def create_showtime(request):
       return Response()
 
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_thread_comment(request):
+   ThreadComment.objects.create(
+      author = Profile.objects.get(id=request.data['author']),
+      content = request.data['content'],
+      comment = Comment.objects.get(id=request.data['comment'])
+   )
+   return Response()
+
 
 @api_view(['POST'])
 @permission_classes([])
@@ -249,6 +259,14 @@ def delete_showtimes_day(request):
       day = Showtime.objects.filter(date=parse_date(request.data['day']))
       day.delete()
       return Response()
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_thread_comment(request):
+   thread_comment = ThreadComment.objects.get(id=request.data['id'])
+   thread_comment.delete()
+   return Response()
 
 
 @api_view(['PUT'])
@@ -394,6 +412,14 @@ def get_showtimes(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+def get_thread_comments(request):
+   thread_comments = ThreadComment.objects.all().order_by("-created_at")
+   thread_comments_serialized = ThreadCommentSerializer(thread_comments, many=True)
+   return Response(thread_comments_serialized.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_votes(request):
    user = request.user
    profile = user.profile
@@ -445,3 +471,18 @@ def update_rsvp(request):
       profile_rsvp.add(event)
    rsvp_serialized = EventSerializer(profile_rsvp, many=True)
    return Response(rsvp_serialized.data)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_thread_comment_likes(request):
+   user = request.user
+   profile = user.profile
+   profile_thread_likes = profile.thread_comment
+   thread_comment = ThreadComment.objects.get(id=request.data['thread_comment'])
+   if thread_comment.likes.filter(id=profile.id).exists():
+      profile_thread_likes.remove(thread_comment)
+   else:
+      profile_thread_likes.add(thread_comment)
+   thread_comment_serialized = ThreadCommentSerializer(profile_thread_likes, many=True)
+   return Response(thread_comment_serialized.data)

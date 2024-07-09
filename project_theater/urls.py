@@ -34,6 +34,7 @@ urlpatterns = [
     path('create-poll/', create_poll),
     path('create-post/', create_post),
     path('create-showtime/', create_showtime),
+    path('create-thread-comment/', create_thread_comment),
     path('create-user/', create_user),
     path('create-vote/', create_vote),
     path('delete-comment/', delete_comment),
@@ -45,6 +46,7 @@ urlpatterns = [
     path('delete-post/', delete_post),
     path('delete-showtime/', delete_showtime),
     path('delete-showtime-day/', delete_showtimes_day),
+    path('delete-thread-comment/', delete_thread_comment),
     path('edit-event/', edit_event),
     path('edit-film/', edit_film),
     path('edit-menu-item/', edit_menu_item),
@@ -57,13 +59,15 @@ urlpatterns = [
     path('get-polls/', get_polls),
     path('get-posts/', get_posts),
     path('get-showtimes/', get_showtimes),
+    path('get-thread-comments/', get_thread_comments),
     path('get-votes/', get_votes),
     path('profile/', get_profile),
     path('refresh/', TokenRefreshView.as_view()),
     path('token/', TokenObtainPairView.as_view()),
     path('update-comment-likes/', update_comment_likes),
     path('update-likes/', update_likes),
-    path('update-rsvp/', update_rsvp)
+    path('update-rsvp/', update_rsvp),
+    path('update-thread-comment-likes/', update_thread_comment_likes)
     
 ]
 

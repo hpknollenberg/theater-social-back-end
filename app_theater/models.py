@@ -79,6 +79,17 @@ class Comment(models.Model):
         return self.content
     
 
+class ThreadComment(models.Model):
+    author = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name="thread_comment", null=True)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name="comment_thread_comments", null=True)
+    likes = models.ManyToManyField(Profile, related_name="thread_comment_likes")
+
+    def __str__(self):
+        return self.content
+
+
 class MenuItem(models.Model):
     name = models.TextField()
     category = models.TextField()
